@@ -1,0 +1,36 @@
+{
+  "name": "async-chainable-exec",
+  "version": "1.0.0",
+  "description": "Plugin for async-chainable that provides exec() support",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hash-bang/async-chainable-exec"
+  },
+  "license": "MIT",
+  "keywords": [
+    "async",
+    "async-chainable",
+    "exec",
+    "spawn"
+  ],
+  "author": "Matt Carter <m@ttcarter.com>",
+  "bugs": {
+    "url": "https://github.com/hash-bang/async-chainable-exec/issues"
+  },
+  "homepage": "https://github.com/hash-bang/async-chainable-exec",
+  "scripts": {
+    "coverage": "istanbul cover node_modules/.bin/_mocha",
+    "test": "mocha test"
+  },
+  "devDependencies": {
+    "chai": "^1.10.0",
+    "istanbul": "^0.3.5",
+    "mocha": "^2.1.0",
+    "mocha-istanbul": "^0.2.0"
+  },
+  "dependencies": {
+    "async-chainable": "~1.6.5",
+    "spawn-args": "0.0.4"
+  }
+}
