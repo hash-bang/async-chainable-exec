@@ -102,6 +102,8 @@ module.exports = function() {
 					payload[key] = arguments[1][key];
 				this._struct.push(payload);
 				break;
+			default:
+				throw new Error('Unsupported call type for async-chainable-exec: ' + calledAs);
 		}
 
 		return this;
