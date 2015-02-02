@@ -21,7 +21,7 @@ Plugin for [async-chainable](https://github.com/hash-bang/async-chainable) that 
 		})
 		.end(function(err) {
 			if (err) throw new Error(err);
-		})
+		});
 
 
 	asyncChainable()
@@ -38,8 +38,17 @@ Plugin for [async-chainable](https://github.com/hash-bang/async-chainable) that 
 		})
 		.end(function(err) {
 			if (err) throw new Error(err);
-		})
+		});
 
+
+	# Setting stdio=inherit will output to the console as the program runs
+	asyncChainable()
+		.use(asyncChainableExec)
+		.execDefaults({stdio: 'inherit'})
+		.exec(['find -type f'])
+		.end(function(err) {
+			if (err) throw new Error(err);
+		});
 
 
 API

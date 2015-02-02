@@ -3,11 +3,19 @@ var spawnArgs = require('spawn-args');
 var spawn = require('child_process').spawn;
 
 module.exports = function() {
+	// .exec() {{{
 	this._plugins['exec'] = function(params) {
 		var self = this;
 		var stdboth = [];
 
-		var spawner = spawn(params.cmd, params.params, params);
+		// Read in params from _execDefaults + params {{
+		var options = JSON.parse(JSON.stringify(this._execDefaults));
+		if (params)
+			for (var k in params)
+				options[k] = params[k];
+		// }}}
+
+		var spawner = spawn(params.cmd, params.params, options);
 
 		var dataListener = function(data) {
 			var out = data.toString();
@@ -108,4 +116,33 @@ module.exports = function() {
 
 		return this;
 	};
+	// }}}
+
+	// .execDefaults {{{
+	this._execDefaults = {};
+
+	this._plugins['execDefaults'] = function(params) {
+		this._execDefaults = params.payload;
+		this._execute(); // Move onto next chain item
+	};
+
+	this.execDefaults = function() {
+		var calledAs = this._getOverload(arguments);
+		switch(calledAs) {
+			case '':
+				// Pass
+				break;
+			case 'object':
+				this._struct.push({
+					type: 'execDefaults',
+					payload:  arguments[0],
+				});
+				break;
+			default:
+				throw new Error('Unsupported call type for async-chainable-exec/execDefaults: ' + calledAs);
+		}
+
+		return this;
+	};
+	// }}}
 };
