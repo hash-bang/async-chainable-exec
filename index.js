@@ -63,6 +63,17 @@ module.exports = function() {
 					params: arguments[0].slice(1),
 				});
 				break;
+			case 'array,object': // Form: exec(array <cmd + params>, object)
+				var payload = {
+					type: 'exec',
+					id: arguments[0],
+					cmd: arguments[0][0],
+					params: arguments[0].slice(1),
+				};
+				for (var key in arguments[1])
+					payload[key] = arguments[1][key];
+				this._struct.push(payload);
+				break;
 			case 'object': // Form exec(object) - expected to contain at least 'cmd', if it contains 'id' that will be saved
 				var payload = arguments[0];
 				if (!payload.cmd) throw new Error('No "cmd" key in passed object to async-chainable-exec');
