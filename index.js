@@ -13,8 +13,8 @@ module.exports = function() {
 			var out = data.toString();
 			stdboth.push(out.substr(0, out.length -1));
 		};
-		spawner.stdout.on('data', dataListener);
-		spawner.stderr.on('data', dataListener);
+		if (spawner.stdout) spawner.stdout.on('data', dataListener);
+		if (spawner.stderr) spawner.stderr.on('data', dataListener);
 
 		spawner.on('close', function(code) {
 			self._context.exec = { // Save details about the last exec in case any future chain wants them
