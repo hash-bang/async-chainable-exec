@@ -1,4 +1,5 @@
 var asyncChainable = require('async-chainable');
+var clone = require('clone');
 var spawnArgs = require('spawn-args');
 var spawn = require('child_process').spawn;
 
@@ -9,11 +10,14 @@ module.exports = function() {
 		var stdboth = [];
 
 		// Read in params from _execDefaults + params {{
-		var options = JSON.parse(JSON.stringify(this._execDefaults));
+		var options = clone(this._execDefaults);
 		if (params)
 			for (var k in params)
 				options[k] = params[k];
 		// }}}
+
+		if (options.log)
+			options.log.call(this, params);
 
 		var spawner = spawn(params.cmd, params.params, options);
 

@@ -51,6 +51,18 @@ Plugin for [async-chainable](https://github.com/hash-bang/async-chainable) that 
 		});
 
 
+	# Echo each command before it is executed
+	asyncChainable()
+		.use(asyncChainableExec)
+		.execDefaults({log: function(cmd) { console.log(cmd.cmd + ' ' + cmd.params.join(' ')) }})
+		.exec('echo foo')
+		.exec('echo bar')
+		.exec('echo baz')
+		.end(function(err) {
+			if (err) throw new Error(err);
+		});
+
+
 API
 ===
 async-chainable-exec provides a single function, `exec()` which can be called a number of ways:

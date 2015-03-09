@@ -178,3 +178,30 @@ describe('exec(name, cmdObject)', function(){
 		expect(output[0]).to.be.equal(__dirname);
 	});
 });
+
+
+describe('exec(cmd + params) with log', function(){
+	var output;
+
+	beforeEach(function(done) {
+		output = '';
+
+		asyncChainable()
+			.use(asyncChainableExec)
+			.execDefaults({log: function(cmd) { console.log(cmd.cmd + ' ' + cmd.params.join(' ')) }})
+			.exec('echo foo')
+			.exec('echo bar')
+			.exec('echo baz')
+			.end(function(err) {
+				expect(err).to.be.undefined();
+				output = this.exec.output;
+				done();
+			});
+
+	});
+
+	it('should return the correct response', function() {
+		expect(output).to.have.length(1);
+		expect(output[0]).to.be.equal('baz');
+	});
+});
