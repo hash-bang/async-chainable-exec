@@ -188,7 +188,10 @@ describe('exec(cmd + params) with log', function(){
 
 		asyncChainable()
 			.use(asyncChainableExec)
-			.execDefaults({log: function(cmd) { console.log(cmd.cmd + ' ' + cmd.params.join(' ')) }})
+			.execDefaults({
+				log: function(cmd) { console.log('[RUN]', cmd.cmd + ' ' + cmd.params.join(' ')) },
+				out: function(data) { console.log('[OUT]', data) }
+			})
 			.exec('echo foo')
 			.exec('echo bar')
 			.exec('echo baz')

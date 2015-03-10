@@ -54,7 +54,10 @@ Plugin for [async-chainable](https://github.com/hash-bang/async-chainable) that 
 	# Echo each command before it is executed
 	asyncChainable()
 		.use(asyncChainableExec)
-		.execDefaults({log: function(cmd) { console.log(cmd.cmd + ' ' + cmd.params.join(' ')) }})
+		.execDefaults({
+			log: function(cmd) { console.log('[RUN]', cmd.cmd + ' ' + cmd.params.join(' ')) }
+			out: function(line) { console.log('[GOT]', line) }
+		})
 		.exec('echo foo')
 		.exec('echo bar')
 		.exec('echo baz')
@@ -82,3 +85,12 @@ Regardless of whether the exec function is called with a name / id the last exec
 | `this.exec.code`                     | Int            | The exit code of the last executed item                                  |
 | `this.exec.output`                   | Array          | The combined STDOUT and STDERR streams from the last execution           |
 
+
+Params
+------
+In addition to the parameters supported by the generic `child_process.spawn()` method the following additional properties are supported:
+
+| Option                      | Type            | Description                                                                      |
+|-----------------------------|-----------------|----------------------------------------------------------------------------------|
+| `log`                       | function(cmd)   | Pass the command object (see above) to this function before every execution      |
+| `out`                       | function(data)  | Pass the output of every command run as a string (both STDOUT and STDERR)        |
