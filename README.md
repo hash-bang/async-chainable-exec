@@ -86,11 +86,12 @@ Regardless of whether the exec function is called with a name / id the last exec
 | `this.exec.output`                   | Array          | The combined STDOUT and STDERR streams from the last execution           |
 
 
-Params
-------
-In addition to the parameters supported by the generic `child_process.spawn()` method the following additional properties are supported:
+Options
+-------
+In addition to the parameters supported by the generic `child_process.spawn()` method the following additional options are supported:
 
 | Option                      | Type            | Description                                                                      |
 |-----------------------------|-----------------|----------------------------------------------------------------------------------|
 | `log`                       | function(cmd)   | Pass the command object (see above) to this function before every execution      |
 | `out`                       | function(data)  | Pass the output of every command run as a string (both STDOUT and STDERR)        |
+| `passthru`                  | boolean         | Also output STDOUT + STDERR into process.stdout / process.stderr. The `out` property cannot be set if this is true |

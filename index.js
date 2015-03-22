@@ -17,6 +17,7 @@ module.exports = function() {
 		// }}}
 
 		if (options.log) options.log.call(this, params);
+		if (options.passthru) options.stdio = 'inherit';
 
 		var spawner = spawn(params.cmd, params.params, options);
 
@@ -25,6 +26,7 @@ module.exports = function() {
 			if (options.out) options.out.call(this, data.toString().replace(/\n$/, ''));
 			stdboth.push(out.substr(0, out.length -1));
 		};
+
 		if (spawner.stdout) spawner.stdout.on('data', dataListener);
 		if (spawner.stderr) spawner.stderr.on('data', dataListener);
 
