@@ -1,6 +1,6 @@
 {
   "name": "async-chainable-exec",
-  "version": "1.2.2",
+  "version": "1.2.3",
   "description": "Plugin for async-chainable that provides exec() support",
   "main": "index.js",
   "repository": {
