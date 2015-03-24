@@ -1,6 +1,5 @@
 var expect = require('chai').expect;
-// var asyncChainable = require('async-chainable');
-var asyncChainable = require('/home/mc/Papers/Projects/Node/async-chainable/index.js');
+var asyncChainable = require('async-chainable');
 var asyncChainableExec = require('../index');
 
 

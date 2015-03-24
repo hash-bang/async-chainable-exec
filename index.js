@@ -1,4 +1,3 @@
-var asyncChainable = require('async-chainable');
 var clone = require('clone');
 var spawnArgs = require('spawn-args');
 var spawn = require('child_process').spawn;
