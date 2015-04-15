@@ -18,13 +18,16 @@ module.exports = function() {
 
 		if (options.style) // Pre-set styles
 			switch (options.style) {
-				case 'batch':
+				case 'batch': // Add colorful prefixs to commands when they run and their output
 					options.log = function(cmd) {
 						console.log(colors.blue('[RUN]'), cmd.cmd + ' ' + cmd.params.join(' '));
 					};
 					options.out = function(data) {
 						console.log(colors.grey('---->'), data);
 					};
+					break;
+				case 'passthru': // Pass though all input
+					options.stdio = 'inherit';
 					break;
 				default:
 					throw new Error('Unknown async-chainable-exec style: ' + options.style);
