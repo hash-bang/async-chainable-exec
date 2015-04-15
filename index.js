@@ -1,3 +1,4 @@
+var colors = require('colors');
 var clone = require('clone');
 var spawnArgs = require('spawn-args');
 var spawn = require('child_process').spawn;
@@ -14,6 +15,20 @@ module.exports = function() {
 			for (var k in params)
 				options[k] = params[k];
 		// }}}
+
+		if (options.style) // Pre-set styles
+			switch (options.style) {
+				case 'batch':
+					options.log = function(cmd) {
+						console.log(colors.blue('[RUN]'), cmd.cmd + ' ' + cmd.params.join(' '));
+					};
+					options.out = function(data) {
+						console.log(colors.grey('---->'), data);
+					};
+					break;
+				default:
+					throw new Error('Unknown async-chainable-exec style: ' + options.style);
+			}
 
 		if (options.log) options.log.call(this, params);
 		if (options.passthru) options.stdio = 'inherit';
