@@ -47,6 +47,9 @@ module.exports = function() {
 		if (spawner.stdout) spawner.stdout.on('data', dataListener);
 		if (spawner.stderr) spawner.stderr.on('data', dataListener);
 
+		if (options.stdout) spawner.stdout.on('data', function(data) { options.stdout(data.toString()) });
+		if (options.stderr) spawner.stderr.on('data', function(data) { options.stderr(data.toString()) });
+
 		spawner.on('close', function(code) {
 			self._context.exec = { // Save details about the last exec in case any future chain wants them
 				code: code,

@@ -207,3 +207,63 @@ describe('exec(cmd + params) with log', function(){
 		expect(output[0]).to.be.equal('baz');
 	});
 });
+
+
+describe('stdout hook', function(){
+	var output;
+
+	beforeEach(function(done) {
+		output = [];
+
+		asyncChainable()
+			.use(asyncChainableExec)
+			.execDefaults({
+				stdout: function(data) { output.push(data.split('\n')[0]) },
+			})
+			.exec(['node', '-e','process.stdout.write("foo")'])
+			.exec(['node', '-e','process.stdout.write("bar")'])
+			.exec(['node', '-e','process.stdout.write("baz")'])
+			.end(function(err) {
+				expect(err).to.be.undefined();
+				done();
+			});
+
+	});
+
+	it('should return the correct response', function() {
+		expect(output).to.have.length(3);
+		expect(output[0]).to.be.equal('foo');
+		expect(output[1]).to.be.equal('bar');
+		expect(output[2]).to.be.equal('baz');
+	});
+});
+
+
+describe('stderr hook', function(){
+	var output;
+
+	beforeEach(function(done) {
+		output = [];
+
+		asyncChainable()
+			.use(asyncChainableExec)
+			.execDefaults({
+				stderr: function(data) { output.push(data.split('\n')[0]) },
+			})
+			.exec(['node', '-e','process.stderr.write("foo")'])
+			.exec(['node', '-e','process.stderr.write("bar")'])
+			.exec(['node', '-e','process.stderr.write("baz")'])
+			.end(function(err) {
+				expect(err).to.be.undefined();
+				done();
+			});
+
+	});
+
+	it('should return the correct response', function() {
+		//expect(output).to.have.length(3);
+		expect(output[0]).to.be.equal('foo');
+		//expect(output[1]).to.be.equal('bar');
+		//expect(output[2]).to.be.equal('baz');
+	});
+});

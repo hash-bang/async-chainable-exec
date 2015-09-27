@@ -95,4 +95,6 @@ In addition to the parameters supported by the generic `child_process.spawn()` m
 | `log`                       | function(cmd)   | Pass the command object (see above) to this function before every execution      |
 | `out`                       | function(data)  | Pass the output of every command run as a string (both STDOUT and STDERR)        |
 | `passthru`                  | boolean         | Also output STDOUT + STDERR into process.stdout / process.stderr. The `out` property cannot be set if this is true |
+| `stderr`                    | function(data)  | Pass the output of any STDERR into a callback                                    |
+| `stdout`                    | function(data)  | Pass the output of any STDOUT into a callback                                    |
 | `style`                     | string          | Use a predefined style (sets `log` + `out`). Currently supported: `batch`, `passthru` |
