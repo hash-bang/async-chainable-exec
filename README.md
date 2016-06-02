@@ -55,8 +55,8 @@ Plugin for [async-chainable](https://github.com/hash-bang/async-chainable) that 
 	asyncChainable()
 		.use(asyncChainableExec)
 		.execDefaults({
-			log: function(cmd) { console.log('[RUN]', cmd.cmd + ' ' + cmd.params.join(' ')) }
-			out: function(line) { console.log('[GOT]', line) }
+			log: function(cmd) { console.log('[RUN]', cmd.cmd + ' ' + cmd.params.join(' ')) },
+			out: function(line) { console.log('[GOT]', line) },
 		})
 		.exec('echo foo')
 		.exec('echo bar')
