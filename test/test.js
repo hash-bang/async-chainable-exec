@@ -13,7 +13,7 @@ describe('exec(name, [cmd + params])', function() {
 			.use(asyncChainableExec)
 			.exec('execOutput', ['echo', 'foo', 'bar', 'baz'])
 			.end(function(err) {
-				expect(err).to.be.undefined();
+				expect(err).to.be.not.ok;
 				output = this.execOutput;
 				done();
 			});
@@ -37,7 +37,7 @@ describe('exec(cmd + params)', function(){
 			.use(asyncChainableExec)
 			.exec('echo w00t')
 			.end(function(err) {
-				expect(err).to.be.undefined();
+				expect(err).to.be.not.ok;
 				output = this.exec.output;
 				done();
 			});
@@ -61,7 +61,7 @@ describe('exec(name, cmd)', function(){
 			.use(asyncChainableExec)
 			.exec('response', 'echo hello world')
 			.end(function(err) {
-				expect(err).to.be.undefined();
+				expect(err).to.be.not.ok;
 				output = this.response;
 				done();
 			});
@@ -85,7 +85,7 @@ describe('exec([cmd + params])', function() {
 			.use(asyncChainableExec)
 			.exec(['echo', 'green', 'eggs', 'and', 'ham'])
 			.end(function(err) {
-				expect(err).to.be.undefined();
+				expect(err).to.be.not.ok;
 				output = this.exec.output;
 				done();
 			});
@@ -114,7 +114,7 @@ describe('exec(cmdObject)', function(){
 				cwd: __dirname,
 			})
 			.end(function(err) {
-				expect(err).to.be.undefined();
+				expect(err).to.be.not.ok;
 				output = this.noises;
 				done();
 			});
@@ -138,7 +138,7 @@ describe('exec(name, [cmd + params], additional)', function(){
 			.use(asyncChainableExec)
 			.exec('bash2', ['bash', '-c', 'echo My directory is $PWD'],  {cwd: __dirname})
 			.end(function(err) {
-				expect(err).to.be.undefined();
+				expect(err).to.be.not.ok;
 				output = this.bash2;
 				done();
 			});
@@ -165,7 +165,7 @@ describe('exec(name, cmdObject)', function(){
 				cwd: __dirname,
 			})
 			.end(function(err) {
-				expect(err).to.be.undefined();
+				expect(err).to.be.not.ok;
 				output = this.output;
 				done();
 			});
@@ -195,7 +195,7 @@ describe('exec(cmd + params) with log', function(){
 			.exec('echo bar')
 			.exec('echo baz')
 			.end(function(err) {
-				expect(err).to.be.undefined();
+				expect(err).to.be.not.ok;
 				output = this.exec.output;
 				done();
 			});
@@ -224,7 +224,7 @@ describe('stdout hook', function(){
 			.exec(['node', '-e','process.stdout.write("bar")'])
 			.exec(['node', '-e','process.stdout.write("baz")'])
 			.end(function(err) {
-				expect(err).to.be.undefined();
+				expect(err).to.be.not.ok;
 				done();
 			});
 
@@ -254,16 +254,16 @@ describe('stderr hook', function(){
 			.exec(['node', '-e','process.stderr.write("bar")'])
 			.exec(['node', '-e','process.stderr.write("baz")'])
 			.end(function(err) {
-				expect(err).to.be.undefined();
+				expect(err).to.be.not.ok;
 				done();
 			});
 
 	});
 
 	it('should return the correct response', function() {
-		//expect(output).to.have.length(3);
+		expect(output).to.have.length(3);
 		expect(output[0]).to.be.equal('foo');
-		//expect(output[1]).to.be.equal('bar');
-		//expect(output[2]).to.be.equal('baz');
+		expect(output[1]).to.be.equal('bar');
+		expect(output[2]).to.be.equal('baz');
 	});
 });
