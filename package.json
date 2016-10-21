@@ -24,14 +24,14 @@
     "test": "mocha test"
   },
   "devDependencies": {
-    "async-chainable": "^2.0.0",
+    "async-chainable": "^2.2.2",
     "chai": "^3.5.0",
     "istanbul": "^0.4.5",
-    "mocha": "^3.0.2",
+    "mocha": "^3.1.2",
     "mocha-istanbul": "^0.3.0"
   },
   "dependencies": {
-    "clone": "~1.0.2",
+    "clone": "~2.0.0",
     "colors": "^1.1.2",
     "spawn-args": "0.2.0"
   }
