@@ -1,3 +1,4 @@
+var argy = require('argy');
 var colors = require('colors');
 var clone = require('clone');
 var spawnArgs = require('spawn-args');
@@ -9,7 +10,7 @@ module.exports = function() {
 		var self = this;
 		var stdboth = [];
 
-		// Read in params from _execDefaults + params {{
+		// Read in params from _execDefaults + params {{{
 		var options = clone(this._execDefaults);
 		if (params)
 			for (var k in params)
@@ -62,85 +63,81 @@ module.exports = function() {
 	};
 
 	this.exec = function() {
-		var calledAs = this._getOverload(arguments);
-		switch(calledAs) {
-			case '':
-				// Pass
-				break;
-			case 'string,array': // Form: exec(name, cmd + params)
-				this._struct.push({
+		var chain = this;
+		argy(arguments)
+			.ifForm('', function() {})
+			.ifForm('string array', function(id, block) {
+				chain._struct.push({
 					type: 'exec',
-					id: arguments[0],
-					cmd: arguments[1][0],
-					params: arguments[1].slice(1),
+					id: id,
+					cmd: block[0],
+					params: block.slice(1),
 				});
-				break;
-			case 'string': // Form: exec(cmd + params)
-				this._struct.push({
+			})
+			.ifForm('string', function(cmd) {
+				chain._struct.push({
 					type: 'exec',
-					cmd: arguments[0].substr(0, arguments[0].indexOf(' ')),
-					params: spawnArgs(arguments[0].substr(arguments[0].indexOf(' ') + 1)),
+					cmd: cmd.substr(0, cmd.indexOf(' ')),
+					params: spawnArgs(cmd.substr(cmd.indexOf(' ') + 1)),
 				});
-				break;
-			case 'string,string': // Form: exec(name, cmd + params)
-				this._struct.push({
+			})
+			.ifForm('string string', function(id, cmd) {
+				chain._struct.push({
 					type: 'exec',
-					id: arguments[0],
-					cmd: arguments[1].substr(0, arguments[1].indexOf(' ')),
-					params: spawnArgs(arguments[1].substr(arguments[1].indexOf(' ') + 1)),
+					id: id,
+					cmd: cmd.substr(0, cmd.indexOf(' ')),
+					params: spawnArgs(cmd.substr(cmd.indexOf(' ') + 1)),
 				});
-				break;
-			case 'array': // Form: exec(array <cmd + params>)
-				this._struct.push({
+			})
+			.ifForm('array', function(block) {
+				chain._struct.push({
 					type: 'exec',
-					cmd: arguments[0][0],
-					params: arguments[0].slice(1),
+					cmd: block[0],
+					params: block.slice(1),
 				});
-				break;
-			case 'array,object': // Form: exec(array <cmd + params>, object)
+			})
+			.ifForm('array object', function(block, options) {
 				var payload = {
 					type: 'exec',
-					id: arguments[0],
-					cmd: arguments[0][0],
-					params: arguments[0].slice(1),
+					cmd: block[0],
+					params: block.slice(1),
 				};
-				for (var key in arguments[1])
-					payload[key] = arguments[1][key];
-				this._struct.push(payload);
-				break;
-			case 'object': // Form exec(object) - expected to contain at least 'cmd', if it contains 'id' that will be saved
-				var payload = arguments[0];
-				if (!payload.cmd) throw new Error('No "cmd" key in passed object to async-chainable-exec');
-				if (!payload.params) payload.params = [];
-				payload.type = 'exec';
-				this._struct.push(payload);
-				break;
-			case 'string,array,object': // Form: exec(name, array <cmd + params>, object <additional spawn args>)
+				for (var key in options)
+					payload[key] = options[key];
+				chain._struct.push(payload);
+			})
+			.ifForm('object', function(options) {
+				if (!options.cmd) throw new Error('No "cmd" key in passed object to async-chainable-exec');
+				if (!options.params) options.params = [];
+				options.type = 'exec';
+				chain._struct.push(options);
+			})
+			.ifForm('string array object', function(id, block, options) {
 				var payload = {
 					type: 'exec',
-					id: arguments[0],
-					cmd: arguments[1][0],
-					params: arguments[1].slice(1),
+					id: id,
+					cmd: block[0],
+					params: block.slice(1),
 				};
-				for (var key in arguments[2])
-					payload[key] = arguments[2][key];
-				this._struct.push(payload);
-				break;
-			case 'string,object': // Form: exec(string <name>, object <additional spawn args>)
-				if (!arguments[1].cmd) throw new Error('No "cmd" key in passed object to async-chainable-exec');
+				for (var key in options)
+					payload[key] = options[key];
+				chain._struct.push(payload);
+			})
+			.ifForm('string object', function(id, options) {
+				if (!options.cmd) throw new Error('No "cmd" key in passed object to async-chainable-exec');
 				var payload = {
 					type: 'exec',
-					id: arguments[0],
+					id: id,
 				};
-				for (var key in arguments[1])
-					payload[key] = arguments[1][key];
-				this._struct.push(payload);
-				break;
-			default:
-				throw new Error('Unsupported call type for async-chainable-exec: ' + calledAs);
-		}
+				for (var key in options)
+					payload[key] = options[key];
+				chain._struct.push(payload);
+			})
+			.ifFormElse(function(form) {
+				throw new Error('Unsupported call type for async-chainable-exec: ' + form);
+			});
 
-		return this;
+		return chain;
 	};
 	// }}}
 
@@ -153,22 +150,21 @@ module.exports = function() {
 	};
 
 	this.execDefaults = function() {
-		var calledAs = this._getOverload(arguments);
-		switch(calledAs) {
-			case '':
-				// Pass
-				break;
-			case 'object':
-				this._struct.push({
-					type: 'execDefaults',
-					payload:  arguments[0],
-				});
-				break;
-			default:
-				throw new Error('Unsupported call type for async-chainable-exec/execDefaults: ' + calledAs);
-		}
+		var chain = this;
 
-		return this;
+		argy(arguments)
+			.ifForm('', function() {})
+			.ifForm('object', function(options) {
+				chain._struct.push({
+					type: 'execDefaults',
+					payload: options,
+				});
+			})
+			.ifFormElse(function(form) {
+				throw new Error('Unsupported call type for async-chainable-exec#execDefaults: ' + form);
+			});
+
+		return chain;
 	};
 	// }}}
 };
