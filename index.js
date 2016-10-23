@@ -1,5 +1,5 @@
 var argy = require('argy');
-var colors = require('colors');
+var colors = require('chalk');
 var clone = require('clone');
 var spawnArgs = require('spawn-args');
 var spawn = require('child_process').spawn;
