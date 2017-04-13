@@ -42,7 +42,7 @@ module.exports = function() {
 		var dataListener = function(data) {
 			var out = data.toString();
 			if (options.out) options.out.call(this, data.toString().replace(/\n$/, ''));
-			stdboth.push(out.substr(0, out.length -1));
+			stdboth.push(out.replace(/\n$/, ''));
 		};
 
 		if (spawner.stdout) spawner.stdout.on('data', dataListener);
