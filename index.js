@@ -77,16 +77,16 @@ module.exports = function() {
 			.ifForm('string', function(cmd) {
 				chain._struct.push({
 					type: 'exec',
-					cmd: cmd.substr(0, cmd.indexOf(' ')),
-					params: spawnArgs(cmd.substr(cmd.indexOf(' ') + 1)),
+					cmd: cmd.split(/\s+/)[0],
+					params: cmd.split(/\s+/).slice(1),
 				});
 			})
 			.ifForm('string string', function(id, cmd) {
 				chain._struct.push({
 					type: 'exec',
 					id: id,
-					cmd: cmd.substr(0, cmd.indexOf(' ')),
-					params: spawnArgs(cmd.substr(cmd.indexOf(' ') + 1)),
+					cmd: cmd.split(/\s+/)[0],
+					params: cmd.split(/\s+/).slice(1),
 				});
 			})
 			.ifForm('array', function(block) {
