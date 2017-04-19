@@ -2,68 +2,69 @@ async-chainable-exec
 ====================
 Plugin for [async-chainable](https://github.com/hash-bang/async-chainable) that adds external program execution.
 
+```javascript
+var asyncChainable = require('async-chainable');
+var asyncChainableExec = require('async-chainable-exec');
 
-	var asyncChainable = require('async-chainable');
-	var asyncChainableExec = require('async-chainable-exec');
-
-	asyncChainable()
-		.use(asyncChainableExec)
-		.exec('echo one two three')
-		.end();
-
-
-	asyncChainable()
-		.use(asyncChainableExec)
-		.exec('dirContents', ['ls', '-l', '-a'])
-		.then(function(next) {
-			console.log('The directory contains', this.dirContents);
-			next();
-		})
-		.end(function(err) {
-			if (err) throw new Error(err);
-		});
+asyncChainable()
+	.use(asyncChainableExec)
+	.exec('echo one two three')
+	.end();
 
 
-	asyncChainable()
-		.use(asyncChainableExec)
-		.exec({
-			id: 'myDir',
-			cmd: 'bash',
-			params: ['-c', 'echo $PWD'],
-			cwd: __dirname,
-		})
-		.then(function(next) {
-			console.log('My directory is', this.myDir);
-			next();
-		})
-		.end(function(err) {
-			if (err) throw new Error(err);
-		});
+asyncChainable()
+	.use(asyncChainableExec)
+	.exec('dirContents', ['ls', '-l', '-a'])
+	.then(function(next) {
+		console.log('The directory contains', this.dirContents);
+		next();
+	})
+	.end(function(err) {
+		if (err) throw new Error(err);
+	});
 
 
-	# Setting stdio=inherit will output to the console as the program runs
-	asyncChainable()
-		.use(asyncChainableExec)
-		.execDefaults({stdio: 'inherit'})
-		.exec(['find -type f'])
-		.end(function(err) {
-			if (err) throw new Error(err);
-		});
+asyncChainable()
+	.use(asyncChainableExec)
+	.exec({
+		id: 'myDir',
+		cmd: 'bash',
+		params: ['-c', 'echo $PWD'],
+		cwd: __dirname,
+	})
+	.then(function(next) {
+		console.log('My directory is', this.myDir);
+		next();
+	})
+	.end(function(err) {
+		if (err) throw new Error(err);
+	});
 
 
-	# Echo each command before it is executed
-	asyncChainable()
-		.use(asyncChainableExec)
-		.execDefaults({
-			log: function(cmd) { console.log('[RUN]', cmd.cmd + ' ' + cmd.params.join(' ')) },
-			out: function(line) { console.log('[GOT]', line) },
-		})
-		.exec('echo foo')
-		.exec('echo bar')
-		.exec('echo baz')
-		.end(function(err) {
-			if (err) throw new Error(err);
-		});
+# Setting stdio=inherit will output to the console as the program runs
+asyncChainable()
+	.use(asyncChainableExec)
+	.execDefaults({stdio: 'inherit'})
+	.exec(['find -type f'])
+	.end(function(err) {
+		if (err) throw new Error(err);
+	});
+
+
+# Echo each command before it is executed
+asyncChainable()
+	.use(asyncChainableExec)
+	.execDefaults({
+		log: function(cmd) { console.log('[RUN]', cmd.cmd + ' ' + cmd.params.join(' ')) },
+		out: function(line) { console.log('[GOT]', line) },
+	})
+	.exec('echo foo')
+	.exec('echo bar')
+	.exec('echo baz')
+	.end(function(err) {
+		if (err) throw new Error(err);
+	});
+```
 
 
 API
